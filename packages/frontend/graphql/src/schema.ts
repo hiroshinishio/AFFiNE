@@ -805,6 +805,8 @@ export interface Query {
   userById: UserType;
   /** List registered users */
   users: Array<UserType>;
+  /** Get users count */
+  usersCount: Scalars['Int']['output'];
   /** Get workspace by id */
   workspace: WorkspaceType;
   /** Get all accessible workspaces for current user */
@@ -1655,6 +1657,10 @@ export type GetUserQuery = {
     | null;
 };
 
+export type GetUsersCountQueryVariables = Exact<{ [key: string]: never }>;
+
+export type GetUsersCountQuery = { __typename?: 'Query'; usersCount: number };
+
 export type GetWorkspaceFeaturesQueryVariables = Exact<{
   workspaceId: Scalars['String']['input'];
 }>;
@@ -2294,6 +2300,11 @@ export type Queries =
       name: 'getUserQuery';
       variables: GetUserQueryVariables;
       response: GetUserQuery;
+    }
+  | {
+      name: 'getUsersCountQuery';
+      variables: GetUsersCountQueryVariables;
+      response: GetUsersCountQuery;
     }
   | {
       name: 'getWorkspaceFeaturesQuery';
