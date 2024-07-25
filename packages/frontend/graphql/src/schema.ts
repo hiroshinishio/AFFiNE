@@ -2117,6 +2117,7 @@ export type ServerConfigQuery = {
     name: string;
     features: Array<ServerFeature>;
     type: ServerDeploymentType;
+    initialized: boolean;
     credentialsRequirement: {
       __typename?: 'CredentialsRequirementType';
       password: {
