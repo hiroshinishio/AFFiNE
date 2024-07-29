@@ -63,19 +63,19 @@ enum CopilotModels {
 }
 
 input CopilotPromptConfigInput {
-  frequencyPenalty: Int
+  frequencyPenalty: Float
   jsonMode: Boolean
-  presencePenalty: Int
-  temperature: Int
-  topP: Int
+  presencePenalty: Float
+  temperature: Float
+  topP: Float
 }
 
 type CopilotPromptConfigType {
-  frequencyPenalty: Int
+  frequencyPenalty: Float
   jsonMode: Boolean
-  presencePenalty: Int
-  temperature: Int
-  topP: Int
+  presencePenalty: Float
+  temperature: Float
+  topP: Float
 }
 
 input CopilotPromptMessageInput {
@@ -104,7 +104,7 @@ type CopilotPromptType {
   action: String
   config: CopilotPromptConfigType
   messages: [CopilotPromptMessageType!]!
-  model: CopilotModels!
+  model: String!
   name: String!
 }
 
