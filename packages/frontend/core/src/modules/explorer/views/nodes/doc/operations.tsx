@@ -23,13 +23,15 @@ import { DocsService, useLiveData, useServices } from '@toeverything/infra';
 import { useCallback, useMemo } from 'react';
 
 import type { NodeOperation } from '../../tree/types';
+import type { ExplorerTreesType } from '../types';
 
 export const useExplorerDocNodeOperations = (
   docId: string,
   options: {
     openInfoModal: () => void;
     openNodeCollapsed: () => void;
-  }
+  },
+  explorerTreesType?: ExplorerTreesType
 ): NodeOperation[] => {
   const t = useI18n();
   const { appSettings } = useAppSettingHelper();
@@ -49,9 +51,29 @@ export const useExplorerDocNodeOperations = (
     }, [docId, compatibleFavoriteItemsAdapter])
   );
 
+  const handleOpenInfoModal = useCallback(() => {
+    if (explorerTreesType) {
+      mixpanel.track('PageOptionClick', {
+        page: 'doc library',
+        segment: explorerTreesType,
+        module: explorerTreesType,
+        control: 'view info',
+      });
+    }
+    options.openInfoModal();
+  }, [explorerTreesType, options]);
+
   const handleMoveToTrash = useCallback(() => {
     if (!docRecord) {
       return;
+    }
+    if (explorerTreesType) {
+      mixpanel.track('PageOptionClick', {
+        page: 'doc library',
+        segment: explorerTreesType,
+        module: explorerTreesType,
+        control: 'move to trash',
+      });
     }
     openConfirmModal({
       title: t['com.affine.moveToTrash.title'](),
@@ -73,7 +95,7 @@ export const useExplorerDocNodeOperations = (
         toast(t['com.affine.toastMessage.movedTrash']());
       },
     });
-  }, [docRecord, openConfirmModal, t]);
+  }, [docRecord, explorerTreesType, openConfirmModal, t]);
 
   const handleOpenInSplitView = useCallback(() => {
     workbenchService.workbench.openDoc(docId, {
@@ -84,7 +106,15 @@ export const useExplorerDocNodeOperations = (
       module: 'doc',
       control: 'open in split view button',
     });
-  }, [docId, workbenchService]);
+    if (explorerTreesType) {
+      mixpanel.track('PageOptionClick', {
+        page: 'doc library',
+        segment: explorerTreesType,
+        module: explorerTreesType,
+        control: 'open in split view',
+      });
+    }
+  }, [docId, explorerTreesType, workbenchService.workbench]);
 
   const handleAddLinkedPage = useAsyncCallback(async () => {
     const newDoc = docsService.createDoc();
@@ -100,9 +130,23 @@ export const useExplorerDocNodeOperations = (
       module: 'doc',
       control: 'add linked doc button',
     });
+    if (explorerTreesType) {
+      mixpanel.track('PageOptionClick', {
+        page: 'doc library',
+        segment: explorerTreesType,
+        module: explorerTreesType,
+        control: 'add linked doc',
+      });
+    }
     workbenchService.workbench.openDoc(newDoc.id);
     options.openNodeCollapsed();
-  }, [docId, options, docsService, workbenchService.workbench]);
+  }, [
+    docsService,
+    docId,
+    explorerTreesType,
+    workbenchService.workbench,
+    options,
+  ]);
 
   const handleToggleFavoriteDoc = useCallback(() => {
     compatibleFavoriteItemsAdapter.toggle(docId, 'doc');
@@ -113,7 +157,15 @@ export const useExplorerDocNodeOperations = (
       type: 'doc',
       id: docId,
     });
-  }, [docId, compatibleFavoriteItemsAdapter]);
+    if (explorerTreesType) {
+      mixpanel.track('PageOptionClick', {
+        page: 'doc library',
+        segment: explorerTreesType,
+        module: explorerTreesType,
+        control: favorite ? 'remove from favourites' : 'add to favourites',
+      });
+    }
+  }, [compatibleFavoriteItemsAdapter, docId, explorerTreesType, favorite]);
 
   return useMemo(
     () => [
@@ -128,7 +180,7 @@ export const useExplorerDocNodeOperations = (
                       <InformationIcon />
                     </MenuIcon>
                   }
-                  onClick={options.openInfoModal}
+                  onClick={handleOpenInfoModal}
                 >
                   {t['com.affine.page-properties.page-info.view']()}
                 </MenuItem>
@@ -220,8 +272,8 @@ export const useExplorerDocNodeOperations = (
       handleAddLinkedPage,
       handleMoveToTrash,
       handleOpenInSplitView,
+      handleOpenInfoModal,
       handleToggleFavoriteDoc,
-      options.openInfoModal,
       t,
     ]
   );

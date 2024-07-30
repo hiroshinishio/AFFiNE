@@ -316,6 +316,7 @@ const ExplorerFavoriteNode = ({
       onDrop={handleOnChildrenDrop}
       dropEffect={dropEffect}
       canDrop={canDrop}
+      explorerTreesType="favourites"
     />
   ) : favorite.type === 'tag' ? (
     <ExplorerTagNode

@@ -27,7 +27,7 @@ import {
 import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
 
 import { ExplorerTreeNode, type ExplorerTreeNodeDropEffect } from '../../tree';
-import type { GenericExplorerNode } from '../types';
+import type { ExplorerTreesType, GenericExplorerNode } from '../types';
 import { Empty } from './empty';
 import { useExplorerDocNodeOperations } from './operations';
 import * as styles from './styles.css';
@@ -41,9 +41,11 @@ export const ExplorerDocNode = ({
   canDrop,
   operations: additionalOperations,
   dropEffect,
+  explorerTreesType,
 }: {
   docId: string;
   isLinked?: boolean;
+  explorerTreesType?: ExplorerTreesType;
 } & GenericExplorerNode) => {
   const t = useI18n();
   const { docsSearchService, docsService, globalContextService } = useServices({
@@ -121,8 +123,16 @@ export const ExplorerDocNode = ({
         module: 'doc',
         control: 'doc rename',
       });
+      if (explorerTreesType) {
+        mixpanel.track('PageOptionClick', {
+          page: 'doc library',
+          segment: explorerTreesType,
+          module: explorerTreesType,
+          control: 'rename',
+        });
+      }
     },
-    [docId, docsService]
+    [docId, docsService, explorerTreesType]
   );
 
   const handleDropOnDoc = useAsyncCallback(

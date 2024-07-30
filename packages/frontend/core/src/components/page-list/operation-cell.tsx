@@ -39,7 +39,7 @@ import {
   useServices,
   WorkspaceService,
 } from '@toeverything/infra';
-import { useCallback, useState } from 'react';
+import { type BaseSyntheticEvent, useCallback, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import type { CollectionService } from '../../modules/collection';
@@ -76,9 +76,15 @@ export const PageOperationCell = ({
   const blocksuiteDoc = currentWorkspace.docCollection.getDoc(page.id);
 
   const [openInfoModal, setOpenInfoModal] = useState(false);
-  const onOpenInfoModal = () => {
+  const onOpenInfoModal = useCallback(() => {
+    mixpanel.track('PageOptionClick', {
+      page: 'doc library',
+      segment: 'all doc',
+      module: 'all doc',
+      control: 'view info',
+    });
     setOpenInfoModal(true);
-  };
+  }, []);
 
   const onDisablePublicSharing = useCallback(() => {
     toast('Successfully disabled', {
@@ -87,6 +93,12 @@ export const PageOperationCell = ({
   }, []);
 
   const onRemoveToTrash = useCallback(() => {
+    mixpanel.track('PageOptionClick', {
+      page: 'doc library',
+      segment: 'all doc',
+      module: 'all doc',
+      control: 'move to trash',
+    });
     setTrashModal({
       open: true,
       pageIds: [page.id],
@@ -95,6 +107,12 @@ export const PageOperationCell = ({
   }, [page.id, page.title, setTrashModal]);
 
   const onOpenInSplitView = useCallback(() => {
+    mixpanel.track('PageOptionClick', {
+      page: 'doc library',
+      segment: 'all doc',
+      module: 'all doc',
+      control: 'open in split view',
+    });
     workbench.openDoc(page.id, { at: 'tail' });
   }, [page.id, workbench]);
 
@@ -108,6 +126,17 @@ export const PageOperationCell = ({
     );
   }, [page.id, favAdapter, t]);
 
+  const onToggleFavoritePageOption = useCallback(() => {
+    mixpanel.track('PageOptionClick', {
+      page: 'doc library',
+      segment: 'all doc',
+      module: 'all doc',
+      control: favourite ? 'remove from favourites' : 'add to favourites',
+    });
+
+    onToggleFavoritePage();
+  }, [favourite, onToggleFavoritePage]);
+
   const onDuplicate = useCallback(() => {
     duplicate(page.id, false);
     mixpanel.track('DocCreated', {
@@ -118,8 +147,35 @@ export const PageOperationCell = ({
       category: 'doc',
       page: 'doc library',
     });
+    mixpanel.track('PageOptionClick', {
+      page: 'doc library',
+      segment: 'all doc',
+      module: 'all doc',
+      control: 'duplicate',
+    });
   }, [duplicate, page.id]);
 
+  const handleRemoveFromAllowList = useCallback(() => {
+    if (onRemoveFromAllowList) {
+      onRemoveFromAllowList();
+      mixpanel.track('PageOptionClick', {
+        page: 'doc library',
+        segment: 'all doc',
+        module: 'all doc',
+        control: 'remove special filter',
+      });
+    }
+  }, [onRemoveFromAllowList]);
+
+  const handleStopPropagation = useCallback((event: BaseSyntheticEvent) => {
+    mixpanel.track('PageOptionClick', {
+      page: 'doc library',
+      segment: 'all doc',
+      module: 'all doc',
+      control: 'open in new tab',
+    });
+    stopPropagationWithoutPrevent(event);
+  }, []);
   const OperationMenu = (
     <>
       {page.isPublic && (
@@ -132,7 +188,7 @@ export const PageOperationCell = ({
       )}
       {isInAllowList && (
         <MenuItem
-          onClick={onRemoveFromAllowList}
+          onClick={handleRemoveFromAllowList}
           preFix={
             <MenuIcon>
               <FilterMinusIcon />
@@ -143,7 +199,7 @@ export const PageOperationCell = ({
         </MenuItem>
       )}
       <MenuItem
-        onClick={onToggleFavoritePage}
+        onClick={onToggleFavoritePageOption}
         preFix={
           <MenuIcon>
             {favourite ? (
@@ -187,7 +243,7 @@ export const PageOperationCell = ({
       {!environment.isDesktop && (
         <Link
           className={styles.clearLinkStyle}
-          onClick={stopPropagationWithoutPrevent}
+          onClick={handleStopPropagation}
           to={`/workspace/${currentWorkspace.id}/${page.id}`}
           target={'_blank'}
           rel="noopener noreferrer"
