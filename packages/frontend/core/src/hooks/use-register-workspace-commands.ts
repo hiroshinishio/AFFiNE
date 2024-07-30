@@ -3,7 +3,7 @@ import type { AffineEditorContainer } from '@blocksuite/presets';
 import { useService, WorkspaceService } from '@toeverything/infra';
 import { useStore } from 'jotai';
 import { useTheme } from 'next-themes';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 
 import {
   PreconditionStrategy,
@@ -17,6 +17,7 @@ import {
 } from '../commands';
 import { usePageHelper } from '../components/blocksuite/block-suite-page-list/utils';
 import { CMDKQuickSearchService } from '../modules/quicksearch/services/cmdk';
+import { TelemetryWorkspaceContextService } from '../modules/telemetry/services/telemetry';
 import { useLanguageHelper } from './affine/use-language-helper';
 import { useActiveBlocksuiteEditor } from './use-block-suite-editor';
 import { useNavigateHelper } from './use-navigate-helper';
@@ -67,6 +68,9 @@ export function useRegisterWorkspaceCommands() {
   const navigationHelper = useNavigateHelper();
   const [editor] = useActiveBlocksuiteEditor();
   const cmdkQuickSearchService = useService(CMDKQuickSearchService);
+  const telemetry = useService(TelemetryWorkspaceContextService);
+
+  const moduleName = useMemo(() => telemetry.getPageContext(), [telemetry]);
 
   useEffect(() => {
     const unsub = registerCMDKCommand(cmdkQuickSearchService, editor);
@@ -81,12 +85,13 @@ export function useRegisterWorkspaceCommands() {
     const unsub = registerAffineUpdatesCommands({
       store,
       t,
+      moduleName,
     });
 
     return () => {
       unsub();
     };
-  }, [store, t]);
+  }, [moduleName, store, t, telemetry]);
 
   // register AffineNavigationCommands
   useEffect(() => {
@@ -95,12 +100,13 @@ export function useRegisterWorkspaceCommands() {
       t,
       docCollection: currentWorkspace.docCollection,
       navigationHelper,
+      moduleName,
     });
 
     return () => {
       unsub();
     };
-  }, [store, t, currentWorkspace.docCollection, navigationHelper]);
+  }, [store, t, currentWorkspace.docCollection, navigationHelper, moduleName]);
 
   // register AffineSettingsCommands
   useEffect(() => {
@@ -110,21 +116,22 @@ export function useRegisterWorkspaceCommands() {
       theme,
       languageHelper,
       editor,
+      moduleName,
     });
 
     return () => {
       unsub();
     };
-  }, [store, t, theme, languageHelper, editor]);
+  }, [store, t, theme, languageHelper, editor, moduleName]);
 
   // register AffineLayoutCommands
   useEffect(() => {
-    const unsub = registerAffineLayoutCommands({ t, store });
+    const unsub = registerAffineLayoutCommands({ t, store, moduleName });
 
     return () => {
       unsub();
     };
-  }, [store, t]);
+  }, [moduleName, store, t]);
 
   // register AffineCreationCommands
   useEffect(() => {
@@ -132,22 +139,24 @@ export function useRegisterWorkspaceCommands() {
       store,
       pageHelper: pageHelper,
       t,
+      moduleName,
     });
 
     return () => {
       unsub();
     };
-  }, [store, pageHelper, t]);
+  }, [store, pageHelper, t, telemetry, moduleName]);
 
   // register AffineHelpCommands
   useEffect(() => {
     const unsub = registerAffineHelpCommands({
       store,
       t,
+      moduleName,
     });
 
     return () => {
       unsub();
     };
-  }, [store, t]);
+  }, [moduleName, store, t]);
 }

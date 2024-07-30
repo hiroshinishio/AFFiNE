@@ -102,6 +102,12 @@ export function useRegisterBlocksuiteEditorCommands() {
         icon: mode === 'page' ? <PageIcon /> : <EdgelessIcon />,
         label: t['com.affine.page-properties.page-info.view'](),
         run() {
+          mixpanel.track('QuickSearchOptionClick', {
+            page: telemetry.getPageContext(),
+            segment: telemetry.getPageContext(),
+            module: telemetry.getPageContext(),
+            control: 'view info',
+          });
           openInfoModal();
         },
       })
@@ -118,6 +124,12 @@ export function useRegisterBlocksuiteEditorCommands() {
           : t['com.affine.favoritePageOperation.add'](),
         run() {
           favAdapter.toggle(docId, 'doc');
+          mixpanel.track('QuickSearchOptionClick', {
+            page: telemetry.getPageContext(),
+            segment: telemetry.getPageContext(),
+            module: telemetry.getPageContext(),
+            control: favorite ? 'remove from favourites' : 'add to favourites',
+          });
           toast(
             favorite
               ? t['com.affine.cmdk.affine.editor.remove-from-favourites']()
@@ -141,6 +153,13 @@ export function useRegisterBlocksuiteEditorCommands() {
             : t['com.affine.pageMode.page']()
         }`,
         run() {
+          mixpanel.track('QuickSearchOptionClick', {
+            page: telemetry.getPageContext(),
+            segment: telemetry.getPageContext(),
+            module: telemetry.getPageContext(),
+            control:
+              mode === 'page' ? 'convert to edgeless' : 'convert to page',
+          });
           doc.toggleMode();
           toast(
             mode === 'page'
@@ -161,6 +180,12 @@ export function useRegisterBlocksuiteEditorCommands() {
         label: t['com.affine.header.option.duplicate'](),
         run() {
           duplicate(docId);
+          mixpanel.track('QuickSearchOptionClick', {
+            page: telemetry.getPageContext(),
+            segment: telemetry.getPageContext(),
+            module: telemetry.getPageContext(),
+            control: 'duplicate',
+          });
           mixpanel.track('DocCreated', {
             control: 'cmdk',
             type: 'doc duplicate',
@@ -178,6 +203,12 @@ export function useRegisterBlocksuiteEditorCommands() {
         icon: mode === 'page' ? <PageIcon /> : <EdgelessIcon />,
         label: t['Export to PDF'](),
         async run() {
+          mixpanel.track('QuickSearchOptionClick', {
+            page: telemetry.getPageContext(),
+            segment: telemetry.getPageContext(),
+            module: telemetry.getPageContext(),
+            control: 'export to pdf',
+          });
           await exportHandler('pdf');
         },
       })
@@ -191,6 +222,12 @@ export function useRegisterBlocksuiteEditorCommands() {
         icon: mode === 'page' ? <PageIcon /> : <EdgelessIcon />,
         label: t['Export to HTML'](),
         async run() {
+          mixpanel.track('QuickSearchOptionClick', {
+            page: telemetry.getPageContext(),
+            segment: telemetry.getPageContext(),
+            module: telemetry.getPageContext(),
+            control: 'export to html',
+          });
           await exportHandler('html');
         },
       })
@@ -204,6 +241,12 @@ export function useRegisterBlocksuiteEditorCommands() {
         icon: mode === 'page' ? <PageIcon /> : <EdgelessIcon />,
         label: t['Export to PNG'](),
         async run() {
+          mixpanel.track('QuickSearchOptionClick', {
+            page: telemetry.getPageContext(),
+            segment: telemetry.getPageContext(),
+            module: telemetry.getPageContext(),
+            control: 'export to png',
+          });
           await exportHandler('png');
         },
       })
@@ -217,6 +260,12 @@ export function useRegisterBlocksuiteEditorCommands() {
         icon: mode === 'page' ? <PageIcon /> : <EdgelessIcon />,
         label: t['Export to Markdown'](),
         async run() {
+          mixpanel.track('QuickSearchOptionClick', {
+            page: telemetry.getPageContext(),
+            segment: telemetry.getPageContext(),
+            module: telemetry.getPageContext(),
+            control: 'export to markdown',
+          });
           await exportHandler('markdown');
         },
       })
@@ -230,6 +279,12 @@ export function useRegisterBlocksuiteEditorCommands() {
         icon: mode === 'page' ? <PageIcon /> : <EdgelessIcon />,
         label: t['com.affine.moveToTrash.title'](),
         run() {
+          mixpanel.track('QuickSearchOptionClick', {
+            page: telemetry.getPageContext(),
+            segment: telemetry.getPageContext(),
+            module: telemetry.getPageContext(),
+            control: 'move to trash',
+          });
           onClickDelete(doc.title$.value);
         },
       })
@@ -244,6 +299,12 @@ export function useRegisterBlocksuiteEditorCommands() {
         icon: mode === 'page' ? <PageIcon /> : <EdgelessIcon />,
         label: t['com.affine.cmdk.affine.editor.restore-from-trash'](),
         run() {
+          mixpanel.track('QuickSearchOptionClick', {
+            page: telemetry.getPageContext(),
+            segment: telemetry.getPageContext(),
+            module: telemetry.getPageContext(),
+            control: 'restore from trash',
+          });
           doc.restoreFromTrash();
         },
       })
@@ -257,6 +318,12 @@ export function useRegisterBlocksuiteEditorCommands() {
           icon: <HistoryIcon />,
           label: t['com.affine.cmdk.affine.editor.reveal-page-history-modal'](),
           run() {
+            mixpanel.track('QuickSearchOptionClick', {
+              page: telemetry.getPageContext(),
+              segment: telemetry.getPageContext(),
+              module: telemetry.getPageContext(),
+              control: 'reveal doc history modal',
+            });
             openHistoryModal();
           },
         })
@@ -274,6 +341,12 @@ export function useRegisterBlocksuiteEditorCommands() {
         label: '',
         icon: null,
         run() {
+          mixpanel.track('QuickSearchOptionClick', {
+            page: telemetry.getPageContext(),
+            segment: telemetry.getPageContext(),
+            module: telemetry.getPageContext(),
+            control: 'save',
+          });
           toast(t['Save']());
         },
       })

@@ -3,14 +3,17 @@ import { SidebarIcon } from '@blocksuite/icons/rc';
 import type { createStore } from 'jotai';
 
 import { appSidebarOpenAtom } from '../components/app-sidebar';
+import { mixpanel } from '../mixpanel';
 import { registerAffineCommand } from './registry';
 
 export function registerAffineLayoutCommands({
   t,
   store,
+  moduleName,
 }: {
   t: ReturnType<typeof useI18n>;
   store: ReturnType<typeof createStore>;
+  moduleName: string;
 }) {
   const unsubs: Array<() => void> = [];
   unsubs.push(
@@ -27,6 +30,14 @@ export function registerAffineLayoutCommands({
         binding: '$mod+/',
       },
       run() {
+        mixpanel.track('QuickSearchOptionClick', {
+          page: moduleName,
+          segment: moduleName,
+          module: moduleName,
+          control: store.get(appSidebarOpenAtom)
+            ? 'collapse left sidebar'
+            : 'expand left sidebar',
+        });
         store.set(appSidebarOpenAtom, v => !v);
       },
     })

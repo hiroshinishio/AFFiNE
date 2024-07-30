@@ -2,7 +2,9 @@ import {
   PreconditionStrategy,
   registerAffineCommand,
 } from '@affine/core/commands';
+import { mixpanel } from '@affine/core/mixpanel';
 import { FindInPageService } from '@affine/core/modules/find-in-page/services/find-in-page';
+import { TelemetryWorkspaceContextService } from '@affine/core/modules/telemetry/services/telemetry';
 import { useService } from '@toeverything/infra';
 import { useCallback, useEffect } from 'react';
 
@@ -15,6 +17,8 @@ export function useRegisterFindInPageCommands() {
 
     findInPage.toggleVisible(selectedText);
   }, [findInPage]);
+
+  const telemetry = useService(TelemetryWorkspaceContextService);
 
   useEffect(() => {
     if (!environment.isDesktop) {
@@ -31,6 +35,12 @@ export function useRegisterFindInPageCommands() {
         icon: null,
         label: '',
         run() {
+          mixpanel.track('QuickSearchOptionClick', {
+            page: telemetry.getPageContext(),
+            segment: telemetry.getPageContext(),
+            module: telemetry.getPageContext(),
+            control: 'find in page',
+          });
           toggleVisible();
         },
       })
@@ -39,5 +49,5 @@ export function useRegisterFindInPageCommands() {
     return () => {
       unsubs.forEach(unsub => unsub());
     };
-  }, [toggleVisible]);
+  }, [telemetry, toggleVisible]);
 }

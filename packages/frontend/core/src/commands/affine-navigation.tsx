@@ -14,11 +14,13 @@ export function registerAffineNavigationCommands({
   store,
   docCollection,
   navigationHelper,
+  moduleName,
 }: {
   t: ReturnType<typeof useI18n>;
   store: ReturnType<typeof createStore>;
   navigationHelper: ReturnType<typeof useNavigateHelper>;
   docCollection: DocCollection;
+  moduleName: string;
 }) {
   const unsubs: Array<() => void> = [];
   unsubs.push(
@@ -28,6 +30,12 @@ export function registerAffineNavigationCommands({
       icon: <ArrowRightBigIcon />,
       label: t['com.affine.cmdk.affine.navigation.goto-all-pages'](),
       run() {
+        mixpanel.track('QuickSearchOptionClick', {
+          page: moduleName,
+          segment: moduleName,
+          module: moduleName,
+          control: 'go to all docs',
+        });
         navigationHelper.jumpToSubPath(docCollection.id, WorkspaceSubPath.ALL);
       },
     })
@@ -40,6 +48,12 @@ export function registerAffineNavigationCommands({
       icon: <ArrowRightBigIcon />,
       label: 'Go to Collection List',
       run() {
+        mixpanel.track('QuickSearchOptionClick', {
+          page: moduleName,
+          segment: moduleName,
+          module: moduleName,
+          control: 'go to collection list',
+        });
         navigationHelper.jumpToCollections(docCollection.id);
       },
     })
@@ -52,6 +66,12 @@ export function registerAffineNavigationCommands({
       icon: <ArrowRightBigIcon />,
       label: 'Go to Tag List',
       run() {
+        mixpanel.track('QuickSearchOptionClick', {
+          page: moduleName,
+          segment: moduleName,
+          module: moduleName,
+          control: 'go to tag list',
+        });
         navigationHelper.jumpToTags(docCollection.id);
       },
     })
@@ -64,6 +84,12 @@ export function registerAffineNavigationCommands({
       icon: <ArrowRightBigIcon />,
       label: t['com.affine.cmdk.affine.navigation.goto-workspace'](),
       run() {
+        mixpanel.track('QuickSearchOptionClick', {
+          page: moduleName,
+          segment: moduleName,
+          module: moduleName,
+          control: 'go to workspace',
+        });
         store.set(openWorkspaceListModalAtom, true);
       },
     })
@@ -80,6 +106,12 @@ export function registerAffineNavigationCommands({
         mixpanel.track('SettingsViewed', {
           // page:
           segment: 'cmdk',
+        });
+        mixpanel.track('QuickSearchOptionClick', {
+          page: moduleName,
+          segment: moduleName,
+          module: moduleName,
+          control: 'go to settings',
         });
         store.set(openSettingModalAtom, s => ({
           activeTab: 'appearance',
@@ -100,6 +132,12 @@ export function registerAffineNavigationCommands({
           // page:
           segment: 'cmdk',
         });
+        mixpanel.track('QuickSearchOptionClick', {
+          page: moduleName,
+          segment: moduleName,
+          module: moduleName,
+          control: 'go to account settings',
+        });
         store.set(openSettingModalAtom, s => ({
           activeTab: 'account',
           open: !s.open,
@@ -115,6 +153,12 @@ export function registerAffineNavigationCommands({
       icon: <ArrowRightBigIcon />,
       label: t['com.affine.cmdk.affine.navigation.goto-trash'](),
       run() {
+        mixpanel.track('QuickSearchOptionClick', {
+          page: moduleName,
+          segment: moduleName,
+          module: moduleName,
+          control: 'go to trash',
+        });
         navigationHelper.jumpToSubPath(
           docCollection.id,
           WorkspaceSubPath.TRASH

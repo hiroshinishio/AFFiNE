@@ -1,6 +1,8 @@
+import { mixpanel } from '@affine/core/mixpanel';
 import type { DocsService } from '@toeverything/infra';
 import { Service } from '@toeverything/infra';
 
+import type { TelemetryWorkspaceContextService } from '../../telemetry/services/telemetry';
 import type { WorkbenchService } from '../../workbench';
 import { CollectionsQuickSearchSession } from '../impls/collections';
 import { CommandsQuickSearchSession } from '../impls/commands';
@@ -13,7 +15,8 @@ export class CMDKQuickSearchService extends Service {
   constructor(
     private readonly quickSearchService: QuickSearchService,
     private readonly workbenchService: WorkbenchService,
-    private readonly docsService: DocsService
+    private readonly docsService: DocsService,
+    private readonly telemetry: TelemetryWorkspaceContextService
   ) {
     super();
   }
@@ -46,6 +49,15 @@ export class CMDKQuickSearchService extends Service {
               docId: string;
               blockId?: string;
             } = result.payload;
+            mixpanel.track('QuickSearchOptionClick', {
+              page: this.telemetry.getPageContext(),
+              segment: this.telemetry.getPageContext(),
+              module: this.telemetry.getPageContext(),
+              control:
+                result.source === 'recent-doc'
+                  ? 'recent docs'
+                  : 'search results of docs',
+            });
 
             this.workbenchService.workbench.openDoc({
               docId: doc.docId,

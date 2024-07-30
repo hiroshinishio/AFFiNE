@@ -6,6 +6,7 @@ import type { createStore } from 'jotai';
 import type { useTheme } from 'next-themes';
 
 import type { useLanguageHelper } from '../hooks/affine/use-language-helper';
+import { mixpanel } from '../mixpanel';
 import { registerAffineCommand } from './registry';
 
 export function registerAffineSettingsCommands({
@@ -13,12 +14,14 @@ export function registerAffineSettingsCommands({
   store,
   theme,
   languageHelper,
+  moduleName,
 }: {
   t: ReturnType<typeof useI18n>;
   store: ReturnType<typeof createStore>;
   theme: ReturnType<typeof useTheme>;
   languageHelper: ReturnType<typeof useLanguageHelper>;
   editor: AffineEditorContainer | null;
+  moduleName: string;
 }) {
   const unsubs: Array<() => void> = [];
   const { onLanguageChange, languagesList, currentLanguage } = languageHelper;
@@ -34,6 +37,12 @@ export function registerAffineSettingsCommands({
       icon: <SettingsIcon />,
       preconditionStrategy: () => theme.theme !== 'system',
       run() {
+        mixpanel.track('QuickSearchOptionClick', {
+          page: moduleName,
+          segment: moduleName,
+          module: moduleName,
+          control: 'change colour mode to system',
+        });
         theme.setTheme('system');
       },
     })
@@ -48,6 +57,12 @@ export function registerAffineSettingsCommands({
       icon: <SettingsIcon />,
       preconditionStrategy: () => theme.theme !== 'dark',
       run() {
+        mixpanel.track('QuickSearchOptionClick', {
+          page: moduleName,
+          segment: moduleName,
+          module: moduleName,
+          control: 'change colour mode to dark',
+        });
         theme.setTheme('dark');
       },
     })
@@ -63,6 +78,12 @@ export function registerAffineSettingsCommands({
       icon: <SettingsIcon />,
       preconditionStrategy: () => theme.theme !== 'light',
       run() {
+        mixpanel.track('QuickSearchOptionClick', {
+          page: moduleName,
+          segment: moduleName,
+          module: moduleName,
+          control: 'change colour mode to light',
+        });
         theme.setTheme('light');
       },
     })
@@ -80,6 +101,12 @@ export function registerAffineSettingsCommands({
       preconditionStrategy: () =>
         store.get(appSettingAtom).fontStyle !== 'Sans',
       run() {
+        mixpanel.track('QuickSearchOptionClick', {
+          page: moduleName,
+          segment: moduleName,
+          module: moduleName,
+          control: 'change font style to sans',
+        });
         store.set(appSettingAtom, prev => ({
           ...prev,
           fontStyle: 'Sans',
@@ -99,6 +126,12 @@ export function registerAffineSettingsCommands({
       preconditionStrategy: () =>
         store.get(appSettingAtom).fontStyle !== 'Serif',
       run() {
+        mixpanel.track('QuickSearchOptionClick', {
+          page: moduleName,
+          segment: moduleName,
+          module: moduleName,
+          control: 'change font style to serif',
+        });
         store.set(appSettingAtom, prev => ({
           ...prev,
           fontStyle: 'Serif',
@@ -118,6 +151,12 @@ export function registerAffineSettingsCommands({
       preconditionStrategy: () =>
         store.get(appSettingAtom).fontStyle !== 'Mono',
       run() {
+        mixpanel.track('QuickSearchOptionClick', {
+          page: moduleName,
+          segment: moduleName,
+          module: moduleName,
+          control: 'change font style to mono',
+        });
         store.set(appSettingAtom, prev => ({
           ...prev,
           fontStyle: 'Mono',
@@ -138,6 +177,12 @@ export function registerAffineSettingsCommands({
         icon: <SettingsIcon />,
         preconditionStrategy: () => currentLanguage?.tag !== language.tag,
         run() {
+          mixpanel.track('QuickSearchOptionClick', {
+            page: moduleName,
+            segment: moduleName,
+            module: moduleName,
+            control: `change display language to ${language.name}`,
+          });
           onLanguageChange(language.tag);
         },
       })
@@ -158,6 +203,14 @@ export function registerAffineSettingsCommands({
       icon: <SettingsIcon />,
       preconditionStrategy: () => environment.isDesktop,
       run() {
+        mixpanel.track('QuickSearchOptionClick', {
+          page: moduleName,
+          segment: moduleName,
+          module: moduleName,
+          control: `change client border style to ${
+            store.get(appSettingAtom).clientBorder ? 'off' : 'on'
+          }`,
+        });
         store.set(appSettingAtom, prev => ({
           ...prev,
           clientBorder: !prev.clientBorder,
@@ -178,6 +231,14 @@ export function registerAffineSettingsCommands({
       category: 'affine:settings',
       icon: <SettingsIcon />,
       run() {
+        mixpanel.track('QuickSearchOptionClick', {
+          page: moduleName,
+          segment: moduleName,
+          module: moduleName,
+          control: `change full width layout to ${
+            store.get(appSettingAtom).fullWidthLayout ? 'off' : 'on'
+          }`,
+        });
         store.set(appSettingAtom, prev => ({
           ...prev,
           fullWidthLayout: !prev.fullWidthLayout,
@@ -201,6 +262,14 @@ export function registerAffineSettingsCommands({
       icon: <SettingsIcon />,
       preconditionStrategy: () => environment.isDesktop,
       run() {
+        mixpanel.track('QuickSearchOptionClick', {
+          page: moduleName,
+          segment: moduleName,
+          module: moduleName,
+          control: `change noise background on the sidebar to ${
+            store.get(appSettingAtom).enableNoisyBackground ? 'off' : 'on'
+          }`,
+        });
         store.set(appSettingAtom, prev => ({
           ...prev,
           enableNoisyBackground: !prev.enableNoisyBackground,
@@ -222,6 +291,14 @@ export function registerAffineSettingsCommands({
       icon: <SettingsIcon />,
       preconditionStrategy: () => environment.isDesktop && environment.isMacOs,
       run() {
+        mixpanel.track('QuickSearchOptionClick', {
+          page: moduleName,
+          segment: moduleName,
+          module: moduleName,
+          control: `change translucent ui on the sidebar to ${
+            store.get(appSettingAtom).enableBlurBackground ? 'off' : 'on'
+          }`,
+        });
         store.set(appSettingAtom, prev => ({
           ...prev,
           enableBlurBackground: !prev.enableBlurBackground,

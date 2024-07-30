@@ -4,16 +4,19 @@ import type { createStore } from 'jotai';
 
 import { openCreateWorkspaceModalAtom } from '../atoms';
 import type { usePageHelper } from '../components/blocksuite/block-suite-page-list/utils';
+import { mixpanel } from '../mixpanel';
 import { registerAffineCommand } from './registry';
 
 export function registerAffineCreationCommands({
   store,
   pageHelper,
   t,
+  moduleName,
 }: {
   t: ReturnType<typeof useI18n>;
   store: ReturnType<typeof createStore>;
   pageHelper: ReturnType<typeof usePageHelper>;
+  moduleName: string;
 }) {
   const unsubs: Array<() => void> = [];
   unsubs.push(
@@ -29,6 +32,12 @@ export function registerAffineCreationCommands({
           }
         : undefined,
       run() {
+        mixpanel.track('QuickSearchOptionClick', {
+          page: moduleName,
+          segment: moduleName,
+          module: moduleName,
+          control: 'new page',
+        });
         pageHelper.createPage();
       },
     })
@@ -41,6 +50,12 @@ export function registerAffineCreationCommands({
       icon: <PlusIcon />,
       label: t['com.affine.cmdk.affine.new-edgeless-page'](),
       run() {
+        mixpanel.track('QuickSearchOptionClick', {
+          page: moduleName,
+          segment: moduleName,
+          module: moduleName,
+          control: 'new edgeless',
+        });
         pageHelper.createEdgeless();
       },
     })
@@ -53,6 +68,12 @@ export function registerAffineCreationCommands({
       icon: <PlusIcon />,
       label: t['com.affine.cmdk.affine.new-workspace'](),
       run() {
+        mixpanel.track('QuickSearchOptionClick', {
+          page: moduleName,
+          segment: moduleName,
+          module: moduleName,
+          control: 'new workspace',
+        });
         store.set(openCreateWorkspaceModalAtom, 'new');
       },
     })
@@ -67,6 +88,12 @@ export function registerAffineCreationCommands({
         return environment.isDesktop;
       },
       run() {
+        mixpanel.track('QuickSearchOptionClick', {
+          page: moduleName,
+          segment: moduleName,
+          module: moduleName,
+          control: 'import workspace',
+        });
         store.set(openCreateWorkspaceModalAtom, 'add');
       },
     })

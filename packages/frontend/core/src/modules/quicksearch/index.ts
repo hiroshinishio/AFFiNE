@@ -9,6 +9,7 @@ import {
 import { CollectionService } from '../collection';
 import { DocsSearchService } from '../docs-search';
 import { WorkspacePropertiesAdapter } from '../properties';
+import { TelemetryWorkspaceContextService } from '../telemetry/services/telemetry';
 import { WorkbenchService } from '../workbench';
 import { QuickSearch } from './entities/quick-search';
 import { CollectionsQuickSearchSession } from './impls/collections';
@@ -39,6 +40,7 @@ export function configureQuickSearchModule(framework: Framework) {
       QuickSearchService,
       WorkbenchService,
       DocsService,
+      TelemetryWorkspaceContextService,
     ])
     .service(RecentDocsService, [WorkspaceLocalState, DocsService])
     .service(DocDisplayMetaService, [WorkspacePropertiesAdapter])
