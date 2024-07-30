@@ -18,13 +18,15 @@ export interface BlockSuiteHeaderTitleProps {
   isPublic?: boolean;
   inputHandleRef?: InlineEditProps['handleRef'];
   className?: string;
+  onTriggerEdit?: () => void;
 }
 
 const inputAttrs = {
   'data-testid': 'title-content',
 } as HTMLAttributes<HTMLInputElement>;
 export const BlocksuiteHeaderTitle = (props: BlockSuiteHeaderTitleProps) => {
-  const { docCollection, pageId, isPublic, inputHandleRef } = props;
+  const { docCollection, pageId, isPublic, inputHandleRef, onTriggerEdit } =
+    props;
   const currentPage = docCollection.getDoc(pageId);
   const pageMeta = useBlockSuiteDocMeta(docCollection).find(
     meta => meta.id === currentPage?.id
@@ -45,6 +47,7 @@ export const BlocksuiteHeaderTitle = (props: BlockSuiteHeaderTitleProps) => {
       autoSelect
       value={title}
       onChange={onChange}
+      onTriggerEdit={onTriggerEdit}
       editable={!isPublic}
       exitible={true}
       placeholder="Untitled"

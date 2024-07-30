@@ -14,6 +14,7 @@ import { DetailPageHeaderPresentButton } from '@affine/core/components/blocksuit
 import { EditorModeSwitch } from '@affine/core/components/blocksuite/block-suite-mode-switch';
 import { useRegisterCopyLinkCommands } from '@affine/core/hooks/affine/use-register-copy-link-commands';
 import { useJournalInfoHelper } from '@affine/core/hooks/use-journal';
+import { mixpanel } from '@affine/core/mixpanel';
 import type { Doc } from '@blocksuite/store';
 import { type Workspace } from '@toeverything/infra';
 import { useAtom, useAtomValue } from 'jotai';
@@ -115,6 +116,15 @@ export function NormalPageHeader({ page, workspace }: PageHeaderProps) {
   const onRename = useCallback(() => {
     setTimeout(() => titleInputHandleRef.current?.triggerEdit());
   }, []);
+
+  const onTriggerEdit = useCallback(() => {
+    mixpanel.track('HeaderOptionClick', {
+      segment: 'editor header',
+      module: 'editor header',
+      control: 'edit title',
+    });
+  }, []);
+
   return (
     <Header className={styles.header} ref={containerRef}>
       <EditorModeSwitch
@@ -125,6 +135,7 @@ export function NormalPageHeader({ page, workspace }: PageHeaderProps) {
         inputHandleRef={titleInputHandleRef}
         pageId={page?.id}
         docCollection={workspace.docCollection}
+        onTriggerEdit={onTriggerEdit}
       />
       <div className={styles.iconButtonContainer}>
         {hideCollect ? null : (

@@ -1,4 +1,5 @@
 import { FavoriteTag } from '@affine/core/components/page-list';
+import { mixpanel } from '@affine/core/mixpanel';
 import { CompatibleFavoriteItemsAdapter } from '@affine/core/modules/properties';
 import { toast } from '@affine/core/utils';
 import { useI18n } from '@affine/i18n';
@@ -30,11 +31,20 @@ export const useFavorite = (pageId: string) => {
 export const FavoriteButton = ({ pageId }: FavoriteButtonProps) => {
   const { favorite, toggleFavorite } = useFavorite(pageId);
 
+  const handleFavorite = useCallback(() => {
+    mixpanel.track('HeaderOptionClick', {
+      segment: 'editor header',
+      module: 'editor header',
+      control: 'fav',
+    });
+    toggleFavorite();
+  }, [toggleFavorite]);
+
   return (
     <FavoriteTag
       data-testid="pin-button"
       active={!!favorite}
-      onClick={toggleFavorite}
+      onClick={handleFavorite}
     />
   );
 };

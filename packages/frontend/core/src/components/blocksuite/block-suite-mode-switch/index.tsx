@@ -71,27 +71,37 @@ export const EditorModeSwitch = ({
       document.removeEventListener('keydown', keydown, { capture: true });
   }, [currentMode, isPublic, doc, pageId, t, trash]);
 
+  const onModeSwitch = useCallback(() => {
+    mixpanel.track('HeaderOptionClick', {
+      segment: 'editor header',
+      module: 'editor header',
+      control: 'switch mode',
+    });
+  }, []);
+
   const onSwitchToPageMode = useCallback(() => {
     mixpanel.track('Button', {
       resolve: 'SwitchToPageMode',
     });
+    onModeSwitch();
     if (currentMode === 'page' || isPublic) {
       return;
     }
     doc.setMode('page');
     toast(t['com.affine.toastMessage.pageMode']());
-  }, [currentMode, isPublic, doc, t]);
+  }, [onModeSwitch, currentMode, isPublic, doc, t]);
 
   const onSwitchToEdgelessMode = useCallback(() => {
     mixpanel.track('Button', {
       resolve: 'SwitchToEdgelessMode',
     });
+    onModeSwitch();
     if (currentMode === 'edgeless' || isPublic) {
       return;
     }
     doc.setMode('edgeless');
     toast(t['com.affine.toastMessage.edgelessMode']());
-  }, [currentMode, isPublic, doc, t]);
+  }, [onModeSwitch, currentMode, isPublic, doc, t]);
 
   const shouldHide = useCallback(
     (mode: DocMode) =>

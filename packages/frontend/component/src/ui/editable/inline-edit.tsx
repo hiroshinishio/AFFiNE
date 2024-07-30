@@ -39,6 +39,7 @@ export interface InlineEditProps
 
   onInput?: (v: string) => void;
   onChange?: (v: string) => void;
+  onTriggerEdit?: () => void;
 
   /**
    * Trigger edit by `click` or `doubleClick`
@@ -83,6 +84,7 @@ export const InlineEdit = ({
 
   onInput,
   onChange,
+  onTriggerEdit,
 
   placeholder,
   placeholderClassName,
@@ -104,11 +106,12 @@ export const InlineEdit = ({
   const triggerEdit = useCallback(() => {
     if (!editable) return;
     setEditing(true);
+    onTriggerEdit?.();
     setTimeout(() => {
       inputRef.current?.focus();
       autoSelect && inputRef.current?.select();
     }, 0);
-  }, [autoSelect, editable]);
+  }, [autoSelect, editable, onTriggerEdit]);
 
   const onDoubleClick = useCallback(() => {
     if (trigger !== 'doubleClick') return;

@@ -83,6 +83,11 @@ export const PageHeaderMenuButton = ({
   const setOpenHistoryTipsModal = useSetAtom(openHistoryTipsModalAtom);
 
   const openHistoryModal = useCallback(() => {
+    mixpanel.track('PageOptionClick', {
+      segment: 'editor header',
+      module: 'editor header',
+      control: 'view history version',
+    });
     if (workspace.flavour === WorkspaceFlavour.AFFINE_CLOUD) {
       return setHistoryModalOpen(true);
     }
@@ -90,11 +95,21 @@ export const PageHeaderMenuButton = ({
   }, [setOpenHistoryTipsModal, workspace.flavour]);
 
   const setOpenInfoModal = useSetAtom(openInfoModalAtom);
-  const openInfoModal = () => {
+  const openInfoModal = useCallback(() => {
+    mixpanel.track('PageOptionClick', {
+      segment: 'editor header',
+      module: 'editor header',
+      control: 'view info',
+    });
     setOpenInfoModal(true);
-  };
+  }, [setOpenInfoModal]);
 
   const handleOpenTrashModal = useCallback(() => {
+    mixpanel.track('PageOptionClick', {
+      segment: 'editor header',
+      module: 'editor header',
+      control: 'move to trash',
+    });
     setTrashModal({
       open: true,
       pageIds: [pageId],
@@ -102,8 +117,23 @@ export const PageHeaderMenuButton = ({
     });
   }, [doc.meta$.value.title, pageId, setTrashModal]);
 
+  const handleRename = useCallback(() => {
+    rename?.();
+    mixpanel.track('PageOptionClick', {
+      segment: 'editor header',
+      module: 'editor header',
+      control: 'rename',
+    });
+  }, [rename]);
+
   const handleSwitchMode = useCallback(() => {
     doc.toggleMode();
+    mixpanel.track('PageOptionClick', {
+      segment: 'editor header',
+      module: 'editor header',
+      control:
+        currentMode === 'page' ? 'convert to edgeless' : 'convert to page',
+    });
     toast(
       currentMode === 'page'
         ? t['com.affine.toastMessage.edgelessMode']()
@@ -115,26 +145,44 @@ export const PageHeaderMenuButton = ({
     transition: 'all 0.3s',
   };
 
+  const handleMenuOpenChange = useCallback((open: boolean) => {
+    if (open) {
+      mixpanel.track('HeaderOptionClick', {
+        segment: 'editor header',
+        module: 'editor header',
+        control: 'page option entry',
+      });
+    }
+  }, []);
+
   const exportHandler = useExportPage(doc.blockSuiteDoc);
 
   const handleDuplicate = useCallback(() => {
     duplicate(pageId);
     mixpanel.track('DocCreated', {
       segment: 'editor header',
-      page: doc.mode$.value === 'page' ? 'doc editor' : 'edgeless editor',
       module: 'header menu',
       control: 'copy doc',
       type: 'doc duplicate',
       category: 'doc',
     });
-  }, [doc.mode$.value, duplicate, pageId]);
+    mixpanel.track('PageOptionClick', {
+      segment: 'editor header',
+      module: 'editor header',
+      control: 'duplicate',
+    });
+  }, [duplicate, pageId]);
 
   const onImportFile = useAsyncCallback(async () => {
     const options = await importFile();
+    mixpanel.track('PageOptionClick', {
+      segment: 'editor header',
+      module: 'editor header',
+      control: 'import',
+    });
     if (options.isWorkspaceFile) {
       mixpanel.track('WorkspaceCreated', {
         segment: 'editor header',
-        page: doc.mode$.value === 'page' ? 'doc editor' : 'edgeless editor',
         module: 'header menu',
         control: 'import button',
         type: 'imported workspace',
@@ -142,13 +190,31 @@ export const PageHeaderMenuButton = ({
     } else {
       mixpanel.track('DocCreated', {
         segment: 'editor header',
-        page: doc.mode$.value === 'page' ? 'doc editor' : 'edgeless editor',
         module: 'header menu',
         control: 'import button',
         type: 'imported doc',
       });
     }
-  }, [doc.mode$.value, importFile]);
+  }, [importFile]);
+
+  const handleShareMenuOpenChange = useCallback((open: boolean) => {
+    if (open) {
+      mixpanel.track('PageOptionClick', {
+        segment: 'editor header',
+        module: 'editor header',
+        control: 'share',
+      });
+    }
+  }, []);
+
+  const handleToggleFavorite = useCallback(() => {
+    mixpanel.track('PageOptionClick', {
+      segment: 'editor header',
+      module: 'editor header',
+      control: favorite ? 'remove from favourites' : 'add to favourites',
+    });
+    toggleFavorite();
+  }, [favorite, toggleFavorite]);
 
   const showResponsiveMenu = hideShare;
   const ResponsiveMenuItems = (
@@ -179,6 +245,9 @@ export const PageHeaderMenuButton = ({
               </MenuIcon>
             ),
           }}
+          subOptions={{
+            onOpenChange: handleShareMenuOpenChange,
+          }}
         >
           {t['com.affine.share-menu.shareButton']()}
         </MenuSub>
@@ -198,7 +267,7 @@ export const PageHeaderMenuButton = ({
             </MenuIcon>
           }
           data-testid="editor-option-menu-rename"
-          onSelect={rename}
+          onSelect={handleRename}
           style={menuItemStyle}
         >
           {t['Rename']()}
@@ -221,7 +290,7 @@ export const PageHeaderMenuButton = ({
       </MenuItem>
       <MenuItem
         data-testid="editor-option-menu-favorite"
-        onSelect={toggleFavorite}
+        onSelect={handleToggleFavorite}
         style={menuItemStyle}
         preFix={
           <MenuIcon>
@@ -317,6 +386,9 @@ export const PageHeaderMenuButton = ({
         items={EditMenu}
         contentOptions={{
           align: 'center',
+        }}
+        rootOptions={{
+          onOpenChange: handleMenuOpenChange,
         }}
       >
         <HeaderDropDownButton />
