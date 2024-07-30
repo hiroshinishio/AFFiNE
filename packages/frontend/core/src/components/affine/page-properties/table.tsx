@@ -8,6 +8,7 @@ import {
   Tooltip,
 } from '@affine/component';
 import { useCurrentWorkspacePropertiesAdapter } from '@affine/core/hooks/use-affine-adapter';
+import { mixpanel } from '@affine/core/mixpanel';
 import { DocLinksService } from '@affine/core/modules/doc-link';
 import type {
   PageInfoCustomProperty,
@@ -611,6 +612,8 @@ export const PagePropertiesTableHeader = ({
     workspaceService.workspace.engine.doc.docState$(docService.doc.id)
   );
 
+  const currentMode = useLiveData(docService.doc.mode$);
+
   const timestampElement = useMemo(() => {
     const localizedCreateTime = manager.createDate
       ? i18nTime(manager.createDate)
@@ -678,8 +681,14 @@ export const PagePropertiesTableHeader = ({
   const dTimestampElement = useDebouncedValue(timestampElement, 500);
 
   const handleCollapse = useCallback(() => {
+    mixpanel.track('ClickDocInfo', {
+      page: currentMode === 'page' ? 'doc editor' : 'whiteboard editor',
+      segment: currentMode === 'page' ? 'doc editor' : 'whiteboard editor',
+      module: currentMode === 'page' ? 'doc editor' : 'whiteboard editor',
+      control: open ? 'collapse' : 'expand',
+    });
     onOpenChange(!open);
-  }, [onOpenChange, open]);
+  }, [currentMode, onOpenChange, open]);
 
   const properties = manager.sorter.getOrderedItems();
 
