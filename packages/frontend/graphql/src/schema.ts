@@ -1704,6 +1704,19 @@ export type GetServerRuntimeConfigQuery = {
   }>;
 };
 
+export type GetServerServiceConfigsQueryVariables = Exact<{
+  [key: string]: never;
+}>;
+
+export type GetServerServiceConfigsQuery = {
+  __typename?: 'Query';
+  serverServiceConfigs: Array<{
+    __typename?: 'ServerServiceConfig';
+    name: string;
+    config: any;
+  }>;
+};
+
 export type GetUserByEmailQueryVariables = Exact<{
   email: Scalars['String']['input'];
 }>;
@@ -2425,6 +2438,11 @@ export type Queries =
       name: 'getServerRuntimeConfigQuery';
       variables: GetServerRuntimeConfigQueryVariables;
       response: GetServerRuntimeConfigQuery;
+    }
+  | {
+      name: 'getServerServiceConfigsQuery';
+      variables: GetServerServiceConfigsQueryVariables;
+      response: GetServerServiceConfigsQuery;
     }
   | {
       name: 'getUserByEmailQuery';
