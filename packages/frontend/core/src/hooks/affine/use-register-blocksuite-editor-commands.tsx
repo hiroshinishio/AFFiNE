@@ -103,9 +103,8 @@ export function useRegisterBlocksuiteEditorCommands() {
         label: t['com.affine.page-properties.page-info.view'](),
         run() {
           mixpanel.track('QuickSearchOptionClick', {
-            page: telemetry.getPageContext(),
-            segment: telemetry.getPageContext(),
-            module: telemetry.getPageContext(),
+            segment: 'cmdk',
+            module: mode === 'page' ? 'doc editor' : 'whiteboard editor',
             control: 'view info',
           });
           openInfoModal();
@@ -125,9 +124,8 @@ export function useRegisterBlocksuiteEditorCommands() {
         run() {
           favAdapter.toggle(docId, 'doc');
           mixpanel.track('QuickSearchOptionClick', {
-            page: telemetry.getPageContext(),
-            segment: telemetry.getPageContext(),
-            module: telemetry.getPageContext(),
+            segment: 'cmdk',
+            module: mode === 'page' ? 'doc editor' : 'whiteboard editor',
             control: favorite ? 'remove from favourites' : 'add to favourites',
           });
           toast(
@@ -154,9 +152,8 @@ export function useRegisterBlocksuiteEditorCommands() {
         }`,
         run() {
           mixpanel.track('QuickSearchOptionClick', {
-            page: telemetry.getPageContext(),
-            segment: telemetry.getPageContext(),
-            module: telemetry.getPageContext(),
+            segment: 'cmdk',
+            module: mode === 'page' ? 'doc editor' : 'whiteboard editor',
             control:
               mode === 'page' ? 'convert to edgeless' : 'convert to page',
           });
@@ -181,9 +178,8 @@ export function useRegisterBlocksuiteEditorCommands() {
         run() {
           duplicate(docId);
           mixpanel.track('QuickSearchOptionClick', {
-            page: telemetry.getPageContext(),
-            segment: telemetry.getPageContext(),
-            module: telemetry.getPageContext(),
+            segment: 'cmdk',
+            module: mode === 'page' ? 'doc editor' : 'whiteboard editor',
             control: 'duplicate',
           });
           mixpanel.track('DocCreated', {
@@ -204,9 +200,8 @@ export function useRegisterBlocksuiteEditorCommands() {
         label: t['Export to PDF'](),
         async run() {
           mixpanel.track('QuickSearchOptionClick', {
-            page: telemetry.getPageContext(),
-            segment: telemetry.getPageContext(),
-            module: telemetry.getPageContext(),
+            segment: 'cmdk',
+            module: mode === 'page' ? 'doc editor' : 'whiteboard editor',
             control: 'export to pdf',
           });
           await exportHandler('pdf');
@@ -223,9 +218,8 @@ export function useRegisterBlocksuiteEditorCommands() {
         label: t['Export to HTML'](),
         async run() {
           mixpanel.track('QuickSearchOptionClick', {
-            page: telemetry.getPageContext(),
-            segment: telemetry.getPageContext(),
-            module: telemetry.getPageContext(),
+            segment: 'cmdk',
+            module: mode === 'page' ? 'doc editor' : 'whiteboard editor',
             control: 'export to html',
           });
           await exportHandler('html');
@@ -242,9 +236,8 @@ export function useRegisterBlocksuiteEditorCommands() {
         label: t['Export to PNG'](),
         async run() {
           mixpanel.track('QuickSearchOptionClick', {
-            page: telemetry.getPageContext(),
-            segment: telemetry.getPageContext(),
-            module: telemetry.getPageContext(),
+            segment: 'cmdk',
+            module: mode === 'page' ? 'doc editor' : 'whiteboard editor',
             control: 'export to png',
           });
           await exportHandler('png');
@@ -261,9 +254,8 @@ export function useRegisterBlocksuiteEditorCommands() {
         label: t['Export to Markdown'](),
         async run() {
           mixpanel.track('QuickSearchOptionClick', {
-            page: telemetry.getPageContext(),
-            segment: telemetry.getPageContext(),
-            module: telemetry.getPageContext(),
+            segment: 'cmdk',
+            module: mode === 'page' ? 'doc editor' : 'whiteboard editor',
             control: 'export to markdown',
           });
           await exportHandler('markdown');
@@ -280,9 +272,8 @@ export function useRegisterBlocksuiteEditorCommands() {
         label: t['com.affine.moveToTrash.title'](),
         run() {
           mixpanel.track('QuickSearchOptionClick', {
-            page: telemetry.getPageContext(),
-            segment: telemetry.getPageContext(),
-            module: telemetry.getPageContext(),
+            segment: 'cmdk',
+            module: mode === 'page' ? 'doc editor' : 'whiteboard editor',
             control: 'move to trash',
           });
           onClickDelete(doc.title$.value);
@@ -300,9 +291,8 @@ export function useRegisterBlocksuiteEditorCommands() {
         label: t['com.affine.cmdk.affine.editor.restore-from-trash'](),
         run() {
           mixpanel.track('QuickSearchOptionClick', {
-            page: telemetry.getPageContext(),
-            segment: telemetry.getPageContext(),
-            module: telemetry.getPageContext(),
+            segment: 'cmdk',
+            module: mode === 'page' ? 'doc editor' : 'whiteboard editor',
             control: 'restore from trash',
           });
           doc.restoreFromTrash();
@@ -319,9 +309,8 @@ export function useRegisterBlocksuiteEditorCommands() {
           label: t['com.affine.cmdk.affine.editor.reveal-page-history-modal'](),
           run() {
             mixpanel.track('QuickSearchOptionClick', {
-              page: telemetry.getPageContext(),
-              segment: telemetry.getPageContext(),
-              module: telemetry.getPageContext(),
+              segment: 'cmdk',
+              module: mode === 'page' ? 'doc editor' : 'whiteboard editor',
               control: 'reveal doc history modal',
             });
             openHistoryModal();
@@ -342,9 +331,8 @@ export function useRegisterBlocksuiteEditorCommands() {
         icon: null,
         run() {
           mixpanel.track('QuickSearchOptionClick', {
-            page: telemetry.getPageContext(),
-            segment: telemetry.getPageContext(),
-            module: telemetry.getPageContext(),
+            segment: 'cmdk',
+            module: mode === 'page' ? 'doc editor' : 'whiteboard editor',
             control: 'save',
           });
           toast(t['Save']());

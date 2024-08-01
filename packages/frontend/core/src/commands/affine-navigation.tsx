@@ -14,13 +14,11 @@ export function registerAffineNavigationCommands({
   store,
   docCollection,
   navigationHelper,
-  moduleName,
 }: {
   t: ReturnType<typeof useI18n>;
   store: ReturnType<typeof createStore>;
   navigationHelper: ReturnType<typeof useNavigateHelper>;
   docCollection: DocCollection;
-  moduleName: string;
 }) {
   const unsubs: Array<() => void> = [];
   unsubs.push(
@@ -31,9 +29,8 @@ export function registerAffineNavigationCommands({
       label: t['com.affine.cmdk.affine.navigation.goto-all-pages'](),
       run() {
         mixpanel.track('QuickSearchOptionClick', {
-          page: moduleName,
-          segment: moduleName,
-          module: moduleName,
+          segment: 'cmdk',
+          module: 'navigation',
           control: 'go to all docs',
         });
         navigationHelper.jumpToSubPath(docCollection.id, WorkspaceSubPath.ALL);
@@ -49,9 +46,8 @@ export function registerAffineNavigationCommands({
       label: 'Go to Collection List',
       run() {
         mixpanel.track('QuickSearchOptionClick', {
-          page: moduleName,
-          segment: moduleName,
-          module: moduleName,
+          segment: 'cmdk',
+          module: 'navigation',
           control: 'go to collection list',
         });
         navigationHelper.jumpToCollections(docCollection.id);
@@ -67,9 +63,8 @@ export function registerAffineNavigationCommands({
       label: 'Go to Tag List',
       run() {
         mixpanel.track('QuickSearchOptionClick', {
-          page: moduleName,
-          segment: moduleName,
-          module: moduleName,
+          segment: 'cmdk',
+          module: 'navigation',
           control: 'go to tag list',
         });
         navigationHelper.jumpToTags(docCollection.id);
@@ -85,9 +80,8 @@ export function registerAffineNavigationCommands({
       label: t['com.affine.cmdk.affine.navigation.goto-workspace'](),
       run() {
         mixpanel.track('QuickSearchOptionClick', {
-          page: moduleName,
-          segment: moduleName,
-          module: moduleName,
+          segment: 'cmdk',
+          module: 'navigation',
           control: 'go to workspace',
         });
         store.set(openWorkspaceListModalAtom, true);
@@ -108,9 +102,8 @@ export function registerAffineNavigationCommands({
           segment: 'cmdk',
         });
         mixpanel.track('QuickSearchOptionClick', {
-          page: moduleName,
-          segment: moduleName,
-          module: moduleName,
+          segment: 'cmdk',
+          module: 'navigation',
           control: 'go to settings',
         });
         store.set(openSettingModalAtom, s => ({
@@ -133,9 +126,8 @@ export function registerAffineNavigationCommands({
           segment: 'cmdk',
         });
         mixpanel.track('QuickSearchOptionClick', {
-          page: moduleName,
-          segment: moduleName,
-          module: moduleName,
+          segment: 'cmdk',
+          module: 'navigation',
           control: 'go to account settings',
         });
         store.set(openSettingModalAtom, s => ({
@@ -154,9 +146,8 @@ export function registerAffineNavigationCommands({
       label: t['com.affine.cmdk.affine.navigation.goto-trash'](),
       run() {
         mixpanel.track('QuickSearchOptionClick', {
-          page: moduleName,
-          segment: moduleName,
-          module: moduleName,
+          segment: 'cmdk',
+          module: 'navigation',
           control: 'go to trash',
         });
         navigationHelper.jumpToSubPath(

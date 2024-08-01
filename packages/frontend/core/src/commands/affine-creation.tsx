@@ -11,12 +11,10 @@ export function registerAffineCreationCommands({
   store,
   pageHelper,
   t,
-  moduleName,
 }: {
   t: ReturnType<typeof useI18n>;
   store: ReturnType<typeof createStore>;
   pageHelper: ReturnType<typeof usePageHelper>;
-  moduleName: string;
 }) {
   const unsubs: Array<() => void> = [];
   unsubs.push(
@@ -33,9 +31,8 @@ export function registerAffineCreationCommands({
         : undefined,
       run() {
         mixpanel.track('QuickSearchOptionClick', {
-          page: moduleName,
-          segment: moduleName,
-          module: moduleName,
+          segment: 'cmdk',
+          module: 'creation',
           control: 'new page',
         });
         pageHelper.createPage();
@@ -51,9 +48,8 @@ export function registerAffineCreationCommands({
       label: t['com.affine.cmdk.affine.new-edgeless-page'](),
       run() {
         mixpanel.track('QuickSearchOptionClick', {
-          page: moduleName,
-          segment: moduleName,
-          module: moduleName,
+          segment: 'cmdk',
+          module: 'creation',
           control: 'new edgeless',
         });
         pageHelper.createEdgeless();
@@ -69,9 +65,8 @@ export function registerAffineCreationCommands({
       label: t['com.affine.cmdk.affine.new-workspace'](),
       run() {
         mixpanel.track('QuickSearchOptionClick', {
-          page: moduleName,
-          segment: moduleName,
-          module: moduleName,
+          segment: 'cmdk',
+          module: 'creation',
           control: 'new workspace',
         });
         store.set(openCreateWorkspaceModalAtom, 'new');
@@ -89,9 +84,8 @@ export function registerAffineCreationCommands({
       },
       run() {
         mixpanel.track('QuickSearchOptionClick', {
-          page: moduleName,
-          segment: moduleName,
-          module: moduleName,
+          segment: 'cmdk',
+          module: 'creation',
           control: 'import workspace',
         });
         store.set(openCreateWorkspaceModalAtom, 'add');

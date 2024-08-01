@@ -14,14 +14,12 @@ export function registerAffineSettingsCommands({
   store,
   theme,
   languageHelper,
-  moduleName,
 }: {
   t: ReturnType<typeof useI18n>;
   store: ReturnType<typeof createStore>;
   theme: ReturnType<typeof useTheme>;
   languageHelper: ReturnType<typeof useLanguageHelper>;
   editor: AffineEditorContainer | null;
-  moduleName: string;
 }) {
   const unsubs: Array<() => void> = [];
   const { onLanguageChange, languagesList, currentLanguage } = languageHelper;
@@ -38,9 +36,8 @@ export function registerAffineSettingsCommands({
       preconditionStrategy: () => theme.theme !== 'system',
       run() {
         mixpanel.track('QuickSearchOptionClick', {
-          page: moduleName,
-          segment: moduleName,
-          module: moduleName,
+          segment: 'cmdk',
+          module: 'settings',
           control: 'change colour mode to system',
         });
         theme.setTheme('system');
@@ -58,9 +55,8 @@ export function registerAffineSettingsCommands({
       preconditionStrategy: () => theme.theme !== 'dark',
       run() {
         mixpanel.track('QuickSearchOptionClick', {
-          page: moduleName,
-          segment: moduleName,
-          module: moduleName,
+          segment: 'cmdk',
+          module: 'settings',
           control: 'change colour mode to dark',
         });
         theme.setTheme('dark');
@@ -79,9 +75,8 @@ export function registerAffineSettingsCommands({
       preconditionStrategy: () => theme.theme !== 'light',
       run() {
         mixpanel.track('QuickSearchOptionClick', {
-          page: moduleName,
-          segment: moduleName,
-          module: moduleName,
+          segment: 'cmdk',
+          module: 'settings',
           control: 'change colour mode to light',
         });
         theme.setTheme('light');
@@ -102,9 +97,8 @@ export function registerAffineSettingsCommands({
         store.get(appSettingAtom).fontStyle !== 'Sans',
       run() {
         mixpanel.track('QuickSearchOptionClick', {
-          page: moduleName,
-          segment: moduleName,
-          module: moduleName,
+          segment: 'cmdk',
+          module: 'settings',
           control: 'change font style to sans',
         });
         store.set(appSettingAtom, prev => ({
@@ -127,9 +121,8 @@ export function registerAffineSettingsCommands({
         store.get(appSettingAtom).fontStyle !== 'Serif',
       run() {
         mixpanel.track('QuickSearchOptionClick', {
-          page: moduleName,
-          segment: moduleName,
-          module: moduleName,
+          segment: 'cmdk',
+          module: 'settings',
           control: 'change font style to serif',
         });
         store.set(appSettingAtom, prev => ({
@@ -152,9 +145,8 @@ export function registerAffineSettingsCommands({
         store.get(appSettingAtom).fontStyle !== 'Mono',
       run() {
         mixpanel.track('QuickSearchOptionClick', {
-          page: moduleName,
-          segment: moduleName,
-          module: moduleName,
+          segment: 'cmdk',
+          module: 'settings',
           control: 'change font style to mono',
         });
         store.set(appSettingAtom, prev => ({
@@ -178,9 +170,8 @@ export function registerAffineSettingsCommands({
         preconditionStrategy: () => currentLanguage?.tag !== language.tag,
         run() {
           mixpanel.track('QuickSearchOptionClick', {
-            page: moduleName,
-            segment: moduleName,
-            module: moduleName,
+            segment: 'cmdk',
+            module: 'settings',
             control: `change display language to ${language.name}`,
           });
           onLanguageChange(language.tag);
@@ -204,9 +195,8 @@ export function registerAffineSettingsCommands({
       preconditionStrategy: () => environment.isDesktop,
       run() {
         mixpanel.track('QuickSearchOptionClick', {
-          page: moduleName,
-          segment: moduleName,
-          module: moduleName,
+          segment: 'cmdk',
+          module: 'settings',
           control: `change client border style to ${
             store.get(appSettingAtom).clientBorder ? 'off' : 'on'
           }`,
@@ -232,9 +222,8 @@ export function registerAffineSettingsCommands({
       icon: <SettingsIcon />,
       run() {
         mixpanel.track('QuickSearchOptionClick', {
-          page: moduleName,
-          segment: moduleName,
-          module: moduleName,
+          segment: 'cmdk',
+          module: 'settings',
           control: `change full width layout to ${
             store.get(appSettingAtom).fullWidthLayout ? 'off' : 'on'
           }`,
@@ -263,9 +252,8 @@ export function registerAffineSettingsCommands({
       preconditionStrategy: () => environment.isDesktop,
       run() {
         mixpanel.track('QuickSearchOptionClick', {
-          page: moduleName,
-          segment: moduleName,
-          module: moduleName,
+          segment: 'cmdk',
+          module: 'settings',
           control: `change noise background on the sidebar to ${
             store.get(appSettingAtom).enableNoisyBackground ? 'off' : 'on'
           }`,
@@ -292,9 +280,8 @@ export function registerAffineSettingsCommands({
       preconditionStrategy: () => environment.isDesktop && environment.isMacOs,
       run() {
         mixpanel.track('QuickSearchOptionClick', {
-          page: moduleName,
-          segment: moduleName,
-          module: moduleName,
+          segment: 'cmdk',
+          module: 'settings',
           control: `change translucent ui on the sidebar to ${
             store.get(appSettingAtom).enableBlurBackground ? 'off' : 'on'
           }`,

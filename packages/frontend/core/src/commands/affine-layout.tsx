@@ -9,11 +9,9 @@ import { registerAffineCommand } from './registry';
 export function registerAffineLayoutCommands({
   t,
   store,
-  moduleName,
 }: {
   t: ReturnType<typeof useI18n>;
   store: ReturnType<typeof createStore>;
-  moduleName: string;
 }) {
   const unsubs: Array<() => void> = [];
   unsubs.push(
@@ -31,9 +29,8 @@ export function registerAffineLayoutCommands({
       },
       run() {
         mixpanel.track('QuickSearchOptionClick', {
-          page: moduleName,
-          segment: moduleName,
-          module: moduleName,
+          segment: 'cmdk',
+          module: 'layout',
           control: store.get(appSidebarOpenAtom)
             ? 'collapse left sidebar'
             : 'expand left sidebar',

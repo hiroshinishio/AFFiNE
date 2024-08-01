@@ -11,11 +11,9 @@ import { registerAffineCommand } from './registry';
 export function registerAffineUpdatesCommands({
   t,
   store,
-  moduleName,
 }: {
   t: ReturnType<typeof useI18n>;
   store: ReturnType<typeof createStore>;
-  moduleName: string;
 }) {
   const unsubs: Array<() => void> = [];
 
@@ -28,9 +26,8 @@ export function registerAffineUpdatesCommands({
       preconditionStrategy: () => !!store.get(updateReadyAtom),
       run() {
         mixpanel.track('QuickSearchOptionClick', {
-          page: moduleName,
-          segment: moduleName,
-          module: moduleName,
+          segment: 'cmdk',
+          module: 'updates',
           control: 'restart to upgrade',
         });
         apis?.updater.quitAndInstall().catch(err => {

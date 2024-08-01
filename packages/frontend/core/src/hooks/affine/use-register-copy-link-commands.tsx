@@ -4,10 +4,9 @@ import {
 } from '@affine/core/commands';
 import { useSharingUrl } from '@affine/core/hooks/affine/use-share-url';
 import { mixpanel } from '@affine/core/mixpanel';
-import { TelemetryWorkspaceContextService } from '@affine/core/modules/telemetry/services/telemetry';
 import { useIsActiveView } from '@affine/core/modules/workbench';
 import { WorkspaceFlavour } from '@affine/env/workspace';
-import { useService, type WorkspaceMetadata } from '@toeverything/infra';
+import { type WorkspaceMetadata } from '@toeverything/infra';
 import { useEffect } from 'react';
 
 export function useRegisterCopyLinkCommands({
@@ -26,8 +25,6 @@ export function useRegisterCopyLinkCommands({
     urlType: 'workspace',
   });
 
-  const telemetry = useService(TelemetryWorkspaceContextService);
-
   useEffect(() => {
     const unsubs: Array<() => void> = [];
 
@@ -43,9 +40,8 @@ export function useRegisterCopyLinkCommands({
         icon: null,
         run() {
           mixpanel.track('QuickSearchOptionClick', {
-            page: telemetry.getPageContext(),
-            segment: telemetry.getPageContext(),
-            module: telemetry.getPageContext(),
+            segment: 'cmdk',
+            module: 'general',
             control: 'copy private link',
           });
           isActiveView && isCloud && onClickCopyLink();
@@ -55,5 +51,5 @@ export function useRegisterCopyLinkCommands({
     return () => {
       unsubs.forEach(unsub => unsub());
     };
-  }, [docId, isActiveView, isCloud, onClickCopyLink, telemetry]);
+  }, [docId, isActiveView, isCloud, onClickCopyLink]);
 }

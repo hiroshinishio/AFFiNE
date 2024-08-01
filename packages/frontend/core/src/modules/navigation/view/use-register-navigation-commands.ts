@@ -6,12 +6,10 @@ import { mixpanel } from '@affine/core/mixpanel';
 import { useService } from '@toeverything/infra';
 import { useEffect } from 'react';
 
-import { TelemetryWorkspaceContextService } from '../../telemetry/services/telemetry';
 import { NavigatorService } from '../services/navigator';
 
 export function useRegisterNavigationCommands() {
   const navigator = useService(NavigatorService).navigator;
-  const telemetry = useService(TelemetryWorkspaceContextService);
   useEffect(() => {
     const unsubs: Array<() => void> = [];
 
@@ -27,9 +25,8 @@ export function useRegisterNavigationCommands() {
         },
         run() {
           mixpanel.track('QuickSearchOptionClick', {
-            page: telemetry.getPageContext(),
-            segment: telemetry.getPageContext(),
-            module: telemetry.getPageContext(),
+            segment: 'cmdk',
+            module: 'general',
             control: 'go back',
           });
           navigator.back();
@@ -48,9 +45,8 @@ export function useRegisterNavigationCommands() {
         },
         run() {
           mixpanel.track('QuickSearchOptionClick', {
-            page: telemetry.getPageContext(),
-            segment: telemetry.getPageContext(),
-            module: telemetry.getPageContext(),
+            segment: 'cmdk',
+            module: 'general',
             control: 'go forward',
           });
           navigator.forward();
@@ -61,5 +57,5 @@ export function useRegisterNavigationCommands() {
     return () => {
       unsubs.forEach(unsub => unsub());
     };
-  }, [navigator, telemetry]);
+  }, [navigator]);
 }
