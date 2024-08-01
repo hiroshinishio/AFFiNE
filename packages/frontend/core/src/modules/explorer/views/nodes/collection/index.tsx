@@ -278,9 +278,8 @@ const ExplorerCollectionNodeChildren = ({
     (id: string) => {
       collectionService.deletePageFromCollection(collection.id, id);
       mixpanel.track('PageOptionClick', {
-        page: 'doc library',
-        segment: 'collections',
-        module: 'collections',
+        segment: 'sidebar',
+        module: 'doc',
         control: 'remove special filter',
       });
       toast(t['com.affine.collection.removePage.success']());
@@ -308,7 +307,6 @@ const ExplorerCollectionNodeChildren = ({
     <ExplorerDocNode
       key={doc.id}
       docId={doc.id}
-      explorerTreesType="collections"
       reorderable={false}
       location={{
         at: 'explorer:collection:filtered-docs',

@@ -250,7 +250,6 @@ const ExplorerFavoriteNode = ({
       onDrop={handleOnChildrenDrop}
       dropEffect={dropEffect}
       canDrop={canDrop}
-      explorerTreesType="old-favourites"
     />
   ) : (
     <ExplorerCollectionNode

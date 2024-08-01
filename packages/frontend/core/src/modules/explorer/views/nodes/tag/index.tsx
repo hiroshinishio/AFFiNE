@@ -213,7 +213,6 @@ export const ExplorerTagNodeDocs = ({ tag }: { tag: Tag }) => {
       location={{
         at: 'explorer:tags:docs',
       }}
-      explorerTreesType="tags"
     />
   ));
 };

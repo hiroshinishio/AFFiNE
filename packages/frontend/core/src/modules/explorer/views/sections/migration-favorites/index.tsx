@@ -158,7 +158,6 @@ const ExplorerMigrationFavoriteNode = ({
       location={childLocation}
       reorderable={false}
       canDrop={false}
-      explorerTreesType="migration-favourites"
     />
   ) : (
     <ExplorerCollectionNode

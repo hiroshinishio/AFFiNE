@@ -47,11 +47,3 @@ export interface GenericExplorerNode {
    */
   dropEffect?: ExplorerTreeNodeDropEffect;
 }
-
-export type ExplorerTreesType =
-  | 'favourites'
-  | 'organize'
-  | 'migration-favourites'
-  | 'old-favourites'
-  | 'collections'
-  | 'tags';

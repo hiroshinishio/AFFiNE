@@ -111,7 +111,6 @@ export const ExplorerFolderNode = ({
           canDrop={canDrop}
           dropEffect={dropEffect}
           operations={additionalOperations}
-          explorerTreesType="organize"
         />
       )
     );
