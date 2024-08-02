@@ -8,6 +8,7 @@ import {
   MenuItem,
   MenuSeparator,
   MenuSub,
+  notify,
 } from '@affine/component';
 import {
   useSelectCollection,
@@ -179,7 +180,13 @@ export const ExplorerFolderNodeFolder = ({
       module: 'organize',
       control: `delete folder`,
     });
-  }, [node]);
+    notify.success({
+      title: t['com.affine.rootAppSidebar.organize.delete.notify-title']({
+        name,
+      }),
+      message: t['com.affine.rootAppSidebar.organize.delete.notify-message'](),
+    });
+  }, [name, node, t]);
 
   const children = useLiveData(node.sortedChildren$);
 
