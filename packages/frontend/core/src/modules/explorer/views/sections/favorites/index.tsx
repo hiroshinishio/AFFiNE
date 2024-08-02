@@ -4,7 +4,7 @@ import {
   IconButton,
   useDropTarget,
 } from '@affine/component';
-import { mixpanel } from '@affine/core/mixpanel';
+import { track } from '@affine/core/mixpanel';
 import {
   DropEffect,
   type ExplorerTreeNodeDropEffect,
@@ -57,12 +57,9 @@ export const ExplorerFavorites = () => {
           data.source.data.entity.id,
           favoriteService.favoriteList.indexAt('before')
         );
-        mixpanel.track('AddFavorite', {
-          page: 'sidebar',
-          module: 'favorite',
-          control: 'drop entity to favorite',
+        track.$.navigationPanel.favorites.addFavorite({
           type: data.source.data.entity.type,
-          id: data.source.data.entity.id,
+          control: 'drag',
         });
         explorerSection.setCollapsed(false);
       }
@@ -96,17 +93,10 @@ export const ExplorerFavorites = () => {
       newDoc.id,
       favoriteService.favoriteList.indexAt('before')
     );
-    mixpanel.track('DocCreated', {
-      page: 'sidebar',
-      module: 'favorites',
-      control: 'new favorite doc button',
-    });
-    mixpanel.track('AddFavorite', {
-      page: 'sidebar',
-      module: 'favorite',
-      control: 'new favorite doc button',
+    track.$.navigationPanel.favorites.createDoc();
+    track.$.navigationPanel.favorites.addFavorite({
+      control: 'createDoc',
       type: 'doc',
-      id: newDoc.id,
     });
     workbenchService.workbench.openDoc(newDoc.id);
     explorerSection.setCollapsed(false);
@@ -142,12 +132,8 @@ export const ExplorerFavorites = () => {
               favorite
             )
           );
-          mixpanel.track('ReorderFavorite', {
-            page: 'sidebar',
-            module: 'favorite',
-            control: 'drop to reorder favorite',
+          track.$.navigationPanel.favorites.reorder({
             type: data.source.data.entity.type,
-            id: data.source.data.entity.id,
           });
         } else if (
           data.source.data.entity?.type &&
@@ -163,12 +149,9 @@ export const ExplorerFavorites = () => {
               favorite
             )
           );
-          mixpanel.track('AddFavorite', {
-            page: 'sidebar',
-            module: 'favorite',
-            control: 'drop entity to favorite',
+          track.$.navigationPanel.favorites.addFavorite({
+            control: 'drag',
             type: data.source.data.entity.type,
-            id: data.source.data.entity.id,
           });
         } else {
           return; // not supported

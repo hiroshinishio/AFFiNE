@@ -14,7 +14,7 @@ import {
   useSelectDoc,
   useSelectTag,
 } from '@affine/core/components/page-list/selector';
-import { mixpanel } from '@affine/core/mixpanel';
+import { track } from '@affine/core/mixpanel';
 import {
   type FolderNode,
   OrganizeService,
@@ -174,11 +174,7 @@ export const ExplorerFolderNodeFolder = ({
 
   const handleDelete = useCallback(() => {
     node.delete();
-    mixpanel.track('FolderDeleted', {
-      page: 'sidebar',
-      module: 'organize',
-      control: `delete folder`,
-    });
+    track.$.navigationPanel.folders.deleteFolder();
   }, [node]);
 
   const children = useLiveData(node.sortedChildren$);
@@ -219,23 +215,13 @@ export const ExplorerFolderNodeFolder = ({
             return;
           }
           node.moveHere(data.source.data.entity.id, node.indexAt('before'));
-          mixpanel.track('FolderMoved', {
-            page: 'sidebar',
-            module: 'organize',
-            control: 'drop folder at folder',
-            type: 'folder',
-            id: data.source.data.entity.id,
-          });
+          track.$.navigationPanel.folders.moveFolder();
         } else if (
           data.source.data.from?.at === 'explorer:organize:folder-node'
         ) {
           node.moveHere(data.source.data.from.nodeId, node.indexAt('before'));
-          mixpanel.track('FolderLinkMoved', {
-            page: 'sidebar',
-            module: 'organize',
-            control: 'drop folder link at folder',
+          track.$.navigationPanel.folders.moveLink({
             type: data.source.data.entity?.type,
-            id: data.source.data.entity?.id,
           });
         } else if (
           data.source.data.entity?.type === 'collection' ||
@@ -247,12 +233,8 @@ export const ExplorerFolderNodeFolder = ({
             data.source.data.entity.id,
             node.indexAt('before')
           );
-          mixpanel.track('FolderLinkCreated', {
-            page: 'sidebar',
-            module: 'organize',
-            control: 'drop entity at folder',
+          track.$.navigationPanel.folders.createLink({
             type: data.source.data.entity?.type,
-            id: data.source.data.entity?.id,
           });
         }
       } else {
@@ -302,23 +284,13 @@ export const ExplorerFolderNodeFolder = ({
           return;
         }
         node.moveHere(data.source.data.entity.id, node.indexAt('before'));
-        mixpanel.track('FolderMoved', {
-          page: 'sidebar',
-          module: 'organize',
-          control: 'drop folder at folder',
-          type: 'folder',
-          id: data.source.data.entity.id,
-        });
+        track.$.navigationPanel.folders.moveFolder();
       } else if (
         data.source.data.from?.at === 'explorer:organize:folder-node'
       ) {
         node.moveHere(data.source.data.from.nodeId, node.indexAt('before'));
-        mixpanel.track('FolderLinkMoved', {
-          page: 'sidebar',
-          module: 'organize',
-          control: 'drop folder link at folder',
+        track.$.navigationPanel.folders.moveLink({
           type: data.source.data.entity?.type,
-          id: data.source.data.entity?.id,
         });
       } else if (
         data.source.data.entity?.type === 'collection' ||
@@ -330,12 +302,8 @@ export const ExplorerFolderNodeFolder = ({
           data.source.data.entity.id,
           node.indexAt('before')
         );
-        mixpanel.track('FolderLinkCreated', {
-          page: 'sidebar',
-          module: 'organize',
-          control: 'drop entity at folder',
+        track.$.navigationPanel.folders.createLink({
           type: data.source.data.entity?.type,
-          id: data.source.data.entity?.id,
         });
       }
     },
@@ -364,13 +332,7 @@ export const ExplorerFolderNodeFolder = ({
             data.source.data.entity.id,
             node.indexAt(at, dropAtNode.id)
           );
-          mixpanel.track('FolderMoved', {
-            page: 'sidebar',
-            module: 'organize',
-            control: `drop folder ${at === 'before' ? 'above' : 'below'} node`,
-            type: 'folder',
-            id: data.source.data.entity?.id,
-          });
+          track.$.navigationPanel.folders.moveFolder();
         } else if (
           data.source.data.from?.at === 'explorer:organize:folder-node'
         ) {
@@ -378,12 +340,8 @@ export const ExplorerFolderNodeFolder = ({
             data.source.data.from.nodeId,
             node.indexAt(at, dropAtNode.id)
           );
-          mixpanel.track('FolderLinkMoved', {
-            page: 'sidebar',
-            module: 'organize',
-            control: `drop folder link ${at === 'before' ? 'above' : 'below'} node`,
+          track.$.navigationPanel.folders.moveLink({
             type: data.source.data.entity?.type,
-            id: data.source.data.entity?.id,
           });
         } else if (
           data.source.data.entity?.type === 'collection' ||
@@ -395,12 +353,8 @@ export const ExplorerFolderNodeFolder = ({
             data.source.data.entity.id,
             node.indexAt(at, dropAtNode.id)
           );
-          mixpanel.track('FolderLinkCreated', {
-            page: 'sidebar',
-            module: 'organize',
-            control: `drop entity ${at === 'before' ? 'above' : 'below'} node`,
+          track.$.navigationPanel.folders.createLink({
             type: data.source.data.entity?.type,
-            id: data.source.data.entity?.id,
           });
         }
       } else if (data.treeInstruction?.type === 'reparent') {
@@ -550,17 +504,10 @@ export const ExplorerFolderNodeFolder = ({
     const newDoc = docsService.createDoc();
     node.createLink('doc', newDoc.id, node.indexAt('before'));
     workbenchService.workbench.openDoc(newDoc.id);
-    mixpanel.track('DocCreated', {
-      page: 'sidebar',
-      module: 'organize',
-      control: `folder new doc button`,
-    });
-    mixpanel.track('FolderLinkCreated', {
-      page: 'sidebar',
-      module: 'organize',
-      control: `folder new doc button`,
+    track.$.navigationPanel.folders.createDoc();
+    track.$.navigationPanel.folders.createLink({
+      control: 'createDoc',
       type: 'doc',
-      id: newDoc.id,
     });
     setCollapsed(false);
   }, [docsService, node, workbenchService.workbench]);
@@ -570,11 +517,7 @@ export const ExplorerFolderNodeFolder = ({
       t['com.affine.rootAppSidebar.organize.new-folders'](),
       node.indexAt('before')
     );
-    mixpanel.track('FolderCreated', {
-      page: 'sidebar',
-      module: 'organize',
-      control: `create sub folder`,
-    });
+    track.$.navigationPanel.folders.createFolder();
     setCollapsed(false);
     setNewFolderId(newFolderId);
   }, [node, t]);
@@ -602,13 +545,6 @@ export const ExplorerFolderNodeFolder = ({
 
           newItemIds.forEach(id => {
             node.createLink(type, id, node.indexAt('after'));
-            mixpanel.track('FolderLinkCreated', {
-              page: 'sidebar',
-              module: 'organize',
-              control: `add selector`,
-              type,
-              id,
-            });
           });
           removedItems.forEach(node => node.delete());
           const updated = newItemIds.length + removedItems.length;
@@ -617,6 +553,10 @@ export const ExplorerFolderNodeFolder = ({
         .catch(err => {
           console.error(`Unexpected error while selecting ${type}`, err);
         });
+      track.$.navigationPanel.folders.createLink({
+        control: 'selector',
+        type,
+      });
     },
     [
       children,
@@ -743,17 +683,9 @@ export const ExplorerFolderNodeFolder = ({
   const handleDeleteChildren = useCallback((node: FolderNode) => {
     node.delete();
     if (node.type$.value === 'folder') {
-      mixpanel.track('FolderDeleted', {
-        page: 'sidebar',
-        module: 'organize',
-        control: 'remove from folder button',
-      });
+      track.$.navigationPanel.folders.deleteFolder();
     } else {
-      mixpanel.track('FolderLinkDeleted', {
-        page: 'sidebar',
-        module: 'organize',
-        control: 'remove from folder button',
-      });
+      track.$.navigationPanel.folders.deleteLink();
     }
   }, []);
 
